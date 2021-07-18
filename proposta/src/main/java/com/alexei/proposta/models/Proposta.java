@@ -1,48 +1,51 @@
-package com.alexei.proposta.controllers;
+package com.alexei.proposta.models;
 
 import java.math.BigDecimal;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
-import com.alexei.proposta.models.Proposta;
-import com.alexei.proposta.validation.CPForCNPJ;
+@Entity
+public class Proposta {
 
-public class PropostaForm {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @NotBlank
-    @CPForCNPJ
     private String cpfORcnpj;
-    @NotBlank
-    @Email
     private String email;
-    @NotBlank
     private String nome;
-    @NotNull
-    @Positive
     private BigDecimal salario;
-
-    @NotBlank
-    @Size(max = 40)
     private String rua;
-    @NotBlank
-    @Size(max = 20)
     private String cep;
-    @NotBlank
-    @Size(max = 20)
     private String bairro;
-    @NotBlank
-    @Size(max = 10)
     private String numero;
-    @NotBlank
-    @Size(max = 30)
     private String complemento;
-    @NotBlank
-    @Size(max = 40)
     private String cidade;
+
+    @Deprecated
+    public Proposta() {
+    }
+
+    public Proposta(String cpfORcnpj, String email, String nome, BigDecimal salario, String rua, String cep,
+            String bairro, String numero, String complemento, String cidade) {
+        this.cpfORcnpj = cpfORcnpj;
+        this.email = email;
+        this.nome = nome;
+        this.salario = salario;
+        this.rua = rua;
+        this.cep = cep;
+        this.bairro = bairro;
+        this.numero = numero;
+        this.complemento = complemento;
+        this.cidade = cidade;
+    }
+
+    public Long getId() {
+        return id;
+    }
 
     public String getCpfORcnpj() {
         return cpfORcnpj;
@@ -82,11 +85,6 @@ public class PropostaForm {
 
     public String getCidade() {
         return cidade;
-    }
-
-    public Proposta toModel() {
-        return new Proposta(this.cpfORcnpj, this.email, this.nome, this.salario, this.rua, this.cep, this.bairro,
-                this.numero, this.complemento, this.cidade);
     }
 
 }
