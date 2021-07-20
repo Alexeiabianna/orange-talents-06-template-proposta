@@ -9,6 +9,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import com.alexei.proposta.models.Proposta;
+import com.alexei.proposta.models.StatusProposta;
 import com.alexei.proposta.validation.CPForCNPJ;
 
 public class PropostaForm {
@@ -84,9 +85,8 @@ public class PropostaForm {
         return cidade;
     }
 
-    public Proposta toModel() {
+    public Proposta toModel(StatusCliente status) {
         return new Proposta(this.cpfORcnpj, this.email, this.nome, this.salario, this.rua, this.cep, this.bairro,
-                this.numero, this.complemento, this.cidade);
+                this.numero, this.complemento, this.cidade, status);
     }
-
 }

@@ -8,6 +8,8 @@ import javax.validation.Valid;
 import com.alexei.proposta.models.Proposta;
 import com.alexei.proposta.repository.PropostaRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,24 +21,52 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import feign.FeignException;
+
 @RestController
 @RequestMapping("/proposta")
 public class PropostaController {
 
     @Autowired
     private PropostaRepository propostaRepository;
+    private final Logger logger = LoggerFactory.getLogger(PropostaController.class);
+
+    @Autowired
+    private StatusDocumento statusDocumento;
 
     @PostMapping
     @Transactional
     public ResponseEntity<?> cria(@RequestBody @Valid PropostaForm form, UriComponentsBuilder uriBuilder) {
         Optional<Proposta> optionalProposta = propostaRepository.findBycpfORcnpj(form.getCpfORcnpj());
         if (!optionalProposta.isPresent()) {
-            Proposta proposta = form.toModel();
+            Proposta proposta = form.toModel(StatusCliente.EM_ANALISE);
 
-            propostaRepository.save(proposta);
+            try {
+                StatusResposta status = statusDocumento.getStatus(new PropostaDto(proposta));
 
-            URI uri = uriBuilder.path("/proposta/{id}").buildAndExpand(proposta.getId()).toUri();
-            return ResponseEntity.created(uri).build();
+                logger.info("Status da proposta com documento {} é {}", status.getDocumento(),
+                        status.getResultadoSolicitacao());
+
+                Proposta propostaAnalisada = form.toModel(status.getResultadoSolicitacao());
+                propostaRepository.save(propostaAnalisada);
+
+                logger.info("Proposta documento={} salário={} criada com sucesso!", proposta.getCpfORcnpj(),
+                        proposta.getSalario());
+
+                URI uri = uriBuilder.path("/proposta/{id}").buildAndExpand(proposta.getId()).toUri();
+
+                return ResponseEntity.created(uri).build();
+
+            } catch (FeignException f) {
+                Proposta propostaAnalisada = form.toModel(StatusCliente.COM_RESTRICAO);
+                propostaRepository.save(propostaAnalisada);
+
+                logger.info("Proposta documento={} salário={} criada com sucesso!", proposta.getCpfORcnpj(),
+                        proposta.getSalario());
+                        
+                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Documento com restrição");
+            }
+
         }
 
         throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Documento já existente na base de dados");

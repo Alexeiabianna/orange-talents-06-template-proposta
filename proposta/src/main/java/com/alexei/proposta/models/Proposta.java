@@ -3,9 +3,12 @@ package com.alexei.proposta.models;
 import java.math.BigDecimal;
 
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import com.alexei.proposta.controllers.StatusCliente;
 
 @Entity
 public class Proposta {
@@ -25,12 +28,15 @@ public class Proposta {
     private String complemento;
     private String cidade;
 
+    @Enumerated
+    private StatusProposta status;
+
     @Deprecated
     public Proposta() {
     }
 
     public Proposta(String cpfORcnpj, String email, String nome, BigDecimal salario, String rua, String cep,
-            String bairro, String numero, String complemento, String cidade) {
+            String bairro, String numero, String complemento, String cidade, StatusCliente status) {
         this.cpfORcnpj = cpfORcnpj;
         this.email = email;
         this.nome = nome;
@@ -41,6 +47,18 @@ public class Proposta {
         this.numero = numero;
         this.complemento = complemento;
         this.cidade = cidade;
+        this.status = setStatusProposta(status);
+
+    }
+
+    private StatusProposta setStatusProposta(StatusCliente status) {
+        if (status.equals(StatusCliente.COM_RESTRICAO)) {
+            return StatusProposta.NAO_ELEGIVEL;
+        }
+        if (status.equals(StatusCliente.SEM_RESTRICAO)) {
+            return StatusProposta.ELEGIVEL;
+        }
+        return StatusProposta.EM_ANALISE;
     }
 
     public Long getId() {
