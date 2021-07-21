@@ -5,10 +5,12 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.alexei.proposta.controllers.Logs.LoggerProposta;
 import com.alexei.proposta.controllers.client.documento.SendProposta;
 import com.alexei.proposta.controllers.client.documento.StatusCliente;
 import com.alexei.proposta.controllers.client.documento.StatusDocumento;
 import com.alexei.proposta.controllers.client.documento.StatusResposta;
+import com.alexei.proposta.controllers.form.PropostaForm;
 import com.alexei.proposta.models.Proposta;
 import com.alexei.proposta.repository.PropostaRepository;
 

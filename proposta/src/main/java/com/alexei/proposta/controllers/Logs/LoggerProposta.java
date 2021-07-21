@@ -1,5 +1,6 @@
-package com.alexei.proposta.controllers;
+package com.alexei.proposta.controllers.Logs;
 
+import com.alexei.proposta.controllers.PropostaController;
 import com.alexei.proposta.controllers.client.documento.StatusResposta;
 import com.alexei.proposta.models.Proposta;
 
