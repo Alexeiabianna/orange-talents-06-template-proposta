@@ -12,8 +12,6 @@ import com.alexei.proposta.controllers.client.documento.StatusResposta;
 import com.alexei.proposta.models.Proposta;
 import com.alexei.proposta.repository.PropostaRepository;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,12 +29,17 @@ import feign.FeignException;
 @RequestMapping("/proposta")
 public class PropostaController {
 
-    @Autowired
     private PropostaRepository propostaRepository;
-    private final Logger logger = LoggerFactory.getLogger(PropostaController.class);
+    private LoggerProposta loggerProposta;
+    private StatusDocumento statusDocumento;
 
     @Autowired
-    private StatusDocumento statusDocumento;
+    public PropostaController(PropostaRepository propostaRepository, LoggerProposta loggerProposta,
+            StatusDocumento statusDocumento) {
+        this.propostaRepository = propostaRepository;
+        this.loggerProposta = loggerProposta;
+        this.statusDocumento = statusDocumento;
+    }
 
     @PostMapping
     @Transactional
@@ -48,25 +51,21 @@ public class PropostaController {
             try {
                 StatusResposta status = statusDocumento.getStatus(new SendProposta(proposta));
 
-                logger.info("Status da proposta com documento {} é {}", status.getDocumento(),
-                        status.getResultadoSolicitacao());
+                loggerProposta.infoStatusProposta(status);
 
                 Proposta propostaAnalisada = form.toModel(status.getResultadoSolicitacao());
                 propostaRepository.save(propostaAnalisada);
 
-                logger.info("Proposta documento={} salário={} criada com sucesso!", proposta.getCpfORcnpj(),
-                        proposta.getSalario());
+                loggerProposta.infoSaveProposta(proposta);
 
                 URI uri = uriBuilder.path("/proposta/{id}").buildAndExpand(proposta.getId()).toUri();
-
                 return ResponseEntity.created(uri).build();
 
             } catch (FeignException f) {
                 Proposta propostaAnalisada = form.toModel(StatusCliente.COM_RESTRICAO);
                 propostaRepository.save(propostaAnalisada);
 
-                logger.info("Proposta documento={} salário={} criada com sucesso!", proposta.getCpfORcnpj(),
-                        proposta.getSalario());
+                loggerProposta.infoSaveProposta(proposta);
                 return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
             }
 
