@@ -9,7 +9,6 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import com.alexei.proposta.models.Proposta;
-import com.alexei.proposta.models.StatusProposta;
 import com.alexei.proposta.validation.CPForCNPJ;
 
 public class PropostaForm {
