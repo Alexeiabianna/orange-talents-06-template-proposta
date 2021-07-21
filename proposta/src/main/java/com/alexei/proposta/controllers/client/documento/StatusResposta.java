@@ -1,4 +1,4 @@
-package com.alexei.proposta.controllers;
+package com.alexei.proposta.controllers.client.documento;
 
 public class StatusResposta {
 

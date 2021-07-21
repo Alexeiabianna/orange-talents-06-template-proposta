@@ -5,6 +5,10 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.alexei.proposta.controllers.client.documento.SendProposta;
+import com.alexei.proposta.controllers.client.documento.StatusCliente;
+import com.alexei.proposta.controllers.client.documento.StatusDocumento;
+import com.alexei.proposta.controllers.client.documento.StatusResposta;
 import com.alexei.proposta.models.Proposta;
 import com.alexei.proposta.repository.PropostaRepository;
 
@@ -42,7 +46,7 @@ public class PropostaController {
             Proposta proposta = form.toModel(StatusCliente.EM_ANALISE);
 
             try {
-                StatusResposta status = statusDocumento.getStatus(new PropostaDto(proposta));
+                StatusResposta status = statusDocumento.getStatus(new SendProposta(proposta));
 
                 logger.info("Status da proposta com documento {} é {}", status.getDocumento(),
                         status.getResultadoSolicitacao());
@@ -63,8 +67,7 @@ public class PropostaController {
 
                 logger.info("Proposta documento={} salário={} criada com sucesso!", proposta.getCpfORcnpj(),
                         proposta.getSalario());
-                        
-                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Documento com restrição");
+                return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
             }
 
         }

@@ -1,14 +1,14 @@
-package com.alexei.proposta.controllers;
+package com.alexei.proposta.controllers.client.documento;
 
 import com.alexei.proposta.models.Proposta;
 
-public class PropostaDto {
+public class SendProposta {
 
     private String documento;
     private String nome;
     private Long idProposta;
 
-    public PropostaDto(Proposta proposta) {
+    public SendProposta(Proposta proposta) {
         this.documento = proposta.getCpfORcnpj();
         this.nome = proposta.getNome();
         this.idProposta = proposta.getId();

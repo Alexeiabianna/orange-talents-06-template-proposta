@@ -8,7 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import com.alexei.proposta.controllers.StatusCliente;
+import com.alexei.proposta.controllers.client.documento.StatusCliente;
 
 @Entity
 public class Proposta {
