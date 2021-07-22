@@ -3,6 +3,7 @@ package com.alexei.proposta.models;
 import java.math.BigDecimal;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,7 +29,7 @@ public class Proposta {
     private String complemento;
     private String cidade;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private StatusProposta status;
 
     @Deprecated
