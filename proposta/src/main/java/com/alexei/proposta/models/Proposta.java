@@ -112,4 +112,12 @@ public class Proposta {
         return cidade;
     }
 
+    public String getCartao() {
+        return cartao;
+    }
+
+    public StatusProposta getStatusProposta() {
+        return status;
+    }
+
 }
