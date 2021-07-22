@@ -1,5 +1,6 @@
 package com.alexei.proposta.controllers;
 
+import java.util.Collection;
 import java.util.Optional;
 
 import com.alexei.proposta.controllers.Logs.LoggerSolicitaCartao;
@@ -29,18 +30,21 @@ public class AssociaCartao {
         this.propostaRepository = propostaRepository;
     }
 
-    @Scheduled(fixedDelayString = "PT10S")
+    @Scheduled(fixedDelayString = "PT20S")
     public void associa() {
         try {
-            Optional<Proposta> optionalProposta = propostaRepository.findByStatus(StatusProposta.ELEGIVEL);
-            if(optionalProposta.isPresent()) {
-                Proposta proposta = optionalProposta.get();
-                CartaoResposta cartao =  resultadoCartao.getCartao(new SendProposta(proposta));
-                loggerSolicitaCartao.infoCartao(cartao);
-                System.out.println("Scheduled ok! "+proposta.getCpfORcnpj());
+            Collection<Proposta> propostas = propostaRepository.findByStatus(StatusProposta.ELEGIVEL);
+            if(propostas.size() > 0) {
+                propostas.stream().forEach(proposta -> {
+                    CartaoResposta cartao =  resultadoCartao.getCartao(new SendProposta(proposta));
+                    proposta.addCartao(cartao.getId());
+                    propostaRepository.save(proposta);
+                    loggerSolicitaCartao.infoCartao(cartao);
+                    System.out.println("Proposta Documento: "+proposta.getCpfORcnpj() + " Cartao gerado!");
+                });
             }
         } catch (Exception e) {
-                System.out.println("Falhou");
+                System.out.println("Enviando propostas");
         }
     }
 
