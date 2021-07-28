@@ -8,8 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.math.BigDecimal;
 
-import com.alexei.proposta.controllers.BiometriaForm;
 import com.alexei.proposta.controllers.client.documento.StatusCliente;
+import com.alexei.proposta.controllers.form.BiometriaForm;
 import com.alexei.proposta.models.Proposta;
 import com.alexei.proposta.repository.PropostaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;

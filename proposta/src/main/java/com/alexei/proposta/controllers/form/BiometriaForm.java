@@ -1,4 +1,4 @@
-package com.alexei.proposta.controllers;
+package com.alexei.proposta.controllers.form;
 
 import javax.validation.constraints.NotBlank;
 

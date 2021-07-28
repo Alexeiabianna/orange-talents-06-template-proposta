@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import com.alexei.proposta.controllers.form.BiometriaForm;
 import com.alexei.proposta.models.Biometria;
 import com.alexei.proposta.models.Proposta;
 import com.alexei.proposta.repository.BiometriaRepository;
