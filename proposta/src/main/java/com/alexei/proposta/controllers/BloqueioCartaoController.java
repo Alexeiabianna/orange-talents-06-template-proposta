@@ -36,11 +36,12 @@ public class BloqueioCartaoController {
 
     @PostMapping("/{id}")
     private ResponseEntity<?> bloqueia(@PathVariable Long id, @RequestHeader("User-Agent") @Valid String userAgent, 
-        @Valid HttpServletRequest ipClient, UriComponentsBuilder uriBuilder) {
+        @Valid HttpServletRequest ipClientReq, UriComponentsBuilder uriBuilder) {
 
         if(!propostaRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
+        String ipClient = GetIPClientHeader.getIpClientRequest(ipClientReq);
         BloqueioForm form = new BloqueioForm(userAgent, ipClient);
         Optional<Proposta> optionalProposta = propostaRepository.findById(id);
         Proposta proposta = optionalProposta.get(); 

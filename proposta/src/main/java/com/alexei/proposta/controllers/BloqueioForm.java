@@ -1,6 +1,5 @@
 package com.alexei.proposta.controllers;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
 
 import com.alexei.proposta.models.BloqueioCartao;
@@ -17,18 +16,10 @@ public class BloqueioForm {
     public BloqueioForm() {
     }
 
-    public BloqueioForm(String userAgent, HttpServletRequest ipClient) {
+    public BloqueioForm(String userAgent, String ipClient) {
         this.userAgente = userAgent;
-        getIpClientRequest(ipClient);
-    }
-
-    private void getIpClientRequest(HttpServletRequest request) {
-        String ip = request.getHeader("X-Forward-For");
-        if (ip.equals(null)) {
-            ip = request.getRemoteAddr();
-        }
-        this.ipCliente = ip;
-    }
+        this.ipCliente = ipClient;
+    } 
 
     public String getIpCliente() {
         return ipCliente;

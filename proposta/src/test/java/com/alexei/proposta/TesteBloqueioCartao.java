@@ -3,13 +3,17 @@ package com.alexei.proposta;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import com.alexei.proposta.controllers.BloqueioForm;
 import com.alexei.proposta.controllers.client.documento.StatusCliente;
+import com.alexei.proposta.models.BloqueioCartao;
 import com.alexei.proposta.models.Proposta;
+import com.alexei.proposta.repository.BloqueioCartaoRepository;
 import com.alexei.proposta.repository.PropostaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +36,12 @@ public class TesteBloqueioCartao {
     @Autowired
     private PropostaRepository propostaRepository;
 
+    @Autowired
+    private BloqueioCartaoRepository bloqueioCartaoRepository;
+
     private Proposta proposta;
     private BloqueioForm form;
+    private BloqueioCartao model;
 
     @BeforeEach
     public void init() {
@@ -55,6 +63,44 @@ public class TesteBloqueioCartao {
     }
 
     @Test
+    public void deveCriarUmFormDeBloqueio() {
+        String userAgente = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36";
+        String ipClient = "192.168.0.1";
+
+        form = new BloqueioForm(userAgente, ipClient);
+
+        Assertions.assertEquals(userAgente, form.getUserAgente());
+        Assertions.assertEquals(ipClient, form.getIpCliente());
+    }
+
+    @Test
+    public void deveCriarUmNovoBloqueio() {
+        String userAgente = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36";
+        String ipClient = "192.168.0.1";
+
+        model = new BloqueioCartao(ipClient, userAgente, proposta);
+
+        Assertions.assertEquals(userAgente, model.getUserAgente());
+        Assertions.assertEquals(ipClient, model.getIpCliente());
+    }
+
+    @Test
+    public void deveCriarUmNovoBloqueioNoBanco() {
+        String userAgente = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36";
+        String ipClient = "192.168.0.1";
+
+        model = new BloqueioCartao(ipClient, userAgente, proposta);
+
+        bloqueioCartaoRepository.save(model);
+        Optional<BloqueioCartao> optionalBloqueioCartao = bloqueioCartaoRepository.findById(proposta.getId());
+
+        BloqueioCartao modelSaved = optionalBloqueioCartao.get();
+
+        Assertions.assertEquals(model.getUserAgente(), modelSaved.getUserAgente());
+        Assertions.assertEquals(model.getIpCliente(), modelSaved.getIpCliente());
+    }
+
+    @Test
     public void deveRetornarNotFound() throws Exception {
         Long id = (long) 0;
         String userAgente = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36";
@@ -70,8 +116,7 @@ public class TesteBloqueioCartao {
         String userAgente = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36";
         String ipClient = "192.168.0.1";
 
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/bloqueio/{id}", id)
-                .header("X-Forward-For", ipClient)
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/bloqueio/{id}", id).header("X-Forward-For", ipClient)
                 .header("User-Agent", userAgente)).andExpect(status().isCreated());
     }
 
