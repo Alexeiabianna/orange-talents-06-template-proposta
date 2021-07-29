@@ -6,7 +6,7 @@ public class GetIPClientHeader {
 
     public static String getIpClientRequest(HttpServletRequest request) {
         String ip = request.getHeader("X-Forward-For");
-        if (ip.equals(null)) {
+        if (ip == null) {
            return ip = request.getRemoteAddr();
         }
         return ip;

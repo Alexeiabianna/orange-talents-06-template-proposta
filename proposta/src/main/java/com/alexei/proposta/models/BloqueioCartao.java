@@ -31,6 +31,7 @@ public class BloqueioCartao {
         this.userAgente = userAgente;
         this.dataCriacao = LocalDateTime.now();
         this.idCartao = proposta.getCartao();
+        this.proposta = proposta;
     }
 
     public Long getId() {
@@ -52,5 +53,9 @@ public class BloqueioCartao {
     public String getIdCartao() {
         return idCartao;
     }
+
+    public Proposta getProposta() {
+        return proposta;
+    }    
 
 }
