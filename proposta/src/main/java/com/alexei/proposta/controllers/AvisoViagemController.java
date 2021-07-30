@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import com.alexei.proposta.controllers.Logs.LoggerAvisoViagem;
 import com.alexei.proposta.controllers.form.AvisoViagemForm;
 import com.alexei.proposta.models.AvisoViagem;
 import com.alexei.proposta.models.Proposta;
@@ -27,11 +28,14 @@ public class AvisoViagemController {
 
     private PropostaRepository propostaRepository;
     private AvisoViagemRepository avisoViagemRepository;
+    private LoggerAvisoViagem loggerAvisoViagem;
 
     @Autowired
-    public AvisoViagemController(PropostaRepository propostaRepository, AvisoViagemRepository avisoViagemRepository) {
+    public AvisoViagemController(PropostaRepository propostaRepository, AvisoViagemRepository avisoViagemRepository, 
+        LoggerAvisoViagem loggerAvisoViagem) {
         this.propostaRepository = propostaRepository;
         this.avisoViagemRepository = avisoViagemRepository;
+        this.loggerAvisoViagem = loggerAvisoViagem;
     }
 
     @PostMapping("/{id}")
@@ -48,10 +52,13 @@ public class AvisoViagemController {
         String ipCliente = GetIPClientHeader.getIpClientRequest(ipClient);
         AvisoViagem avisoViagem = form.toModel(userAgent, ipCliente, proposta);
 
-        avisoViagemRepository.save(avisoViagem);
-
-        
-
-        return ResponseEntity.ok().body(form);
+        if(avisoViagem.isValidIdCartao()) {
+            avisoViagemRepository.save(avisoViagem);
+    
+            loggerAvisoViagem.infoSaveAviso(avisoViagem);
+    
+            return ResponseEntity.ok().body(form);
+        }
+        return ResponseEntity.unprocessableEntity().build();
     }
 }

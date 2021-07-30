@@ -33,6 +33,7 @@ public class AvisoViagem {
         this.userAgente = userAgente;
         this.dataCriacao = LocalDateTime.now();
         this.idCartao = proposta.getCartao();
+        this.proposta = proposta;
     }
 
     public Long getId() {
@@ -65,6 +66,13 @@ public class AvisoViagem {
 
     public Proposta getProposta() {
         return proposta;
+    }
+
+    public boolean isValidIdCartao() {
+        if(idCartao != null) {
+            return true;
+        }
+        return false;
     }
 
 }
