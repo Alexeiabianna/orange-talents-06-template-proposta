@@ -29,6 +29,10 @@ public class AvisoViagemForm {
         return dataTermino;
     }
 
+    public String getDataTerminoToString() {
+        return dataTermino.toString();
+    }
+
     public AvisoViagem toModel(String userAgente, String ipCliente, Proposta proposta) {
         return new AvisoViagem(destino, dataTermino, ipCliente, userAgente, proposta);
     }
