@@ -4,7 +4,6 @@ public class BloqueioResposta {
 
     private String resultado;
 
-    
     public BloqueioResposta() {
     }
 
@@ -13,11 +12,10 @@ public class BloqueioResposta {
     }
 
     public boolean isValid() {
-        if(resultado.equals("BLOQUEADO")) {
-            System.out.println("Resultado request: "+resultado);
+        if (resultado.equals("BLOQUEADO")) {
             return true;
         }
         return false;
-    }    
+    }
 
 }
