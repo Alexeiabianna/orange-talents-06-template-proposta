@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import com.alexei.proposta.controllers.client.bloqueio.BloqueioResposta;
@@ -43,6 +44,7 @@ public class BloqueioCartaoController {
     }
 
     @PostMapping("/{id}")
+    @Transactional
     private ResponseEntity<?> bloqueia(@PathVariable Long id, @RequestHeader("User-Agent") @Valid String userAgent,
             @Valid HttpServletRequest ipClientReq, UriComponentsBuilder uriBuilder) {
 
