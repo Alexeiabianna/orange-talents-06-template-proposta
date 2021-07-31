@@ -109,7 +109,10 @@ services:
 
   prometheus:
     image: prom/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
     volumes:
+     - "./src/main/resources/prometheus.yml:/etc/prometheus/prometheus.yml"
      - prometheus-volume:/etc/prometheus/
     network_mode: bridge
     ports:
