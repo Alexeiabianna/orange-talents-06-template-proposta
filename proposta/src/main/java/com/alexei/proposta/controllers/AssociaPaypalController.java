@@ -1,5 +1,6 @@
 package com.alexei.proposta.controllers;
 
+import java.net.URI;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -20,11 +21,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import feign.FeignException;
 
 @RestController
-@RequestMapping("/carteira/paypal")
+@RequestMapping("/carteira")
 public class AssociaPaypalController {
 
     private PropostaRepository propostaRepository;
@@ -40,7 +42,8 @@ public class AssociaPaypalController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<?> associa(@PathVariable Long id, @Valid @RequestBody CarteiraForm form) {
+    public ResponseEntity<?> associa(@PathVariable Long id, @Valid @RequestBody CarteiraForm form, 
+        UriComponentsBuilder uribuilder) {
 
         if(!propostaRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
@@ -59,7 +62,8 @@ public class AssociaPaypalController {
             if(associaResposta.isValid() && carteira.isValidId()) {
                 carteiraRepository.save(carteira);
 
-                return ResponseEntity.ok().build();
+                URI location = uribuilder.path("/carteira/{id}").buildAndExpand(carteira.getId()).toUri();
+                return ResponseEntity.created(location).build();
             }
 
             
