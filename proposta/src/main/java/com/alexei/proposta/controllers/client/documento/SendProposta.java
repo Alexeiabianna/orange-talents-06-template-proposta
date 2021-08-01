@@ -24,6 +24,5 @@ public class SendProposta {
 
     public Long getIdProposta() {
         return idProposta;
-    }    
-
+    }
 }

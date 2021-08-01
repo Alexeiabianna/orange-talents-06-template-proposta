@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.alexei.proposta.controllers.client.documento.CriptografaDados;
 import com.alexei.proposta.controllers.client.documento.StatusCliente;
 
 @Entity
@@ -40,7 +41,7 @@ public class Proposta {
 
     public Proposta(String cpfORcnpj, String email, String nome, BigDecimal salario, String rua, String cep,
             String bairro, String numero, String complemento, String cidade, StatusCliente status) {
-        this.cpfORcnpj = cpfORcnpj;
+        this.cpfORcnpj = CriptografaDados.encryptaDocumento(cpfORcnpj);
         this.email = email;
         this.nome = nome;
         this.salario = salario;
@@ -73,7 +74,7 @@ public class Proposta {
     }
 
     public String getCpfORcnpj() {
-        return cpfORcnpj;
+        return CriptografaDados.decryptDocumento(cpfORcnpj);
     }
 
     public String getEmail() {
